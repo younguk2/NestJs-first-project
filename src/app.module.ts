@@ -2,9 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from './entity/Student.entity';
 
-import { StudentService } from './service/student.service';
-import { StudentController } from './controller/student.controller';
+import { StudentService } from './student/student.service';
+import { StudentController } from './student/student.controller';
 import { UserModule } from './user/user.module';
+import { UserEntity } from './entity/user.entity';
+import { CommentEntity } from './entity/comment.entity';
+import { ArticleEntity } from './entity/article.entity';
+import * as path from 'path';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -15,13 +20,13 @@ import { UserModule } from './user/user.module';
       username: 'test',
       password: '1234',
       database: 'test1',
-      entities: [Student],
-      synchronize: true, // 개발 환경에서만 사용
+      entities: [path.join(__dirname, './entity/**/*.entity.{js, ts}')],
+      synchronize: true,
     }),
-    TypeOrmModule.forFeature([Student]), // 엔티티를 TypeOrmModule에 등록
+    StudentModule,
     UserModule,
   ],
-  providers: [StudentService],
-  controllers: [StudentController],
+  providers: [],
+  controllers: [],
 })
 export class AppModule {}
